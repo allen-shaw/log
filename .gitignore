@@ -20,3 +20,6 @@
 # IDE config files
 .history
 .idea
+
+# log 
+*.log
