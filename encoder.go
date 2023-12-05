@@ -1,6 +1,7 @@
 package log
 
 import (
+	"github.com/allen-shaw/log/Internal/encoder"
 	"go.uber.org/zap/buffer"
 	"go.uber.org/zap/zapcore"
 )
@@ -11,13 +12,8 @@ const (
 	_separator  = "|"
 )
 
-type encoderConfig struct {
-	TraceKey string `json:"trace_key"`
-	zapcore.EncoderConfig
-}
-
-func newProductionEncoderConfig() encoderConfig {
-	return encoderConfig{
+func newProductionEncoderConfig() encoder.Config {
+	return encoder.Config{
 		TraceKey: _traceKey,
 		EncoderConfig: zapcore.EncoderConfig{
 			TimeKey:          "ts",
@@ -38,7 +34,7 @@ func newProductionEncoderConfig() encoderConfig {
 }
 
 type consoleEncoder struct {
-	*encoderConfig
+	*encoder.Config
 	buf *buffer.Buffer
 }
 
@@ -47,6 +43,6 @@ func newEncoder(opt *options) zapcore.Encoder {
 	return newConsoleEncoder(ecfg)
 }
 
-func newConsoleEncoder(cfg encoderConfig) zapcore.Encoder {
-	panic("no implement")
+func newConsoleEncoder(cfg encoder.Config) zapcore.Encoder {
+	return encoder.NewConsoleEncoder(cfg)
 }
