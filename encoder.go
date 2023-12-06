@@ -1,7 +1,7 @@
 package log
 
 import (
-	"github.com/allen-shaw/log/Internal/encoder"
+	"github.com/allen-shaw/log/internal/encoder"
 	"go.uber.org/zap/zapcore"
 )
 
