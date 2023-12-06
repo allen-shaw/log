@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"math"
+	"strings"
 	"time"
 	"unicode/utf8"
 
@@ -316,6 +317,11 @@ func (enc *consoleEncoder) EncodeEntry(ent zapcore.Entry, fields []zapcore.Field
 		if final.CallerKey != "" && final.EncodeCaller != nil {
 			final.EncodeCaller(ent.Caller, arr)
 		}
+		// support print function, full function name like "github.com/allen-shaw/log/examples.TestWithTraceID"
+		// only keep the last part like "examples.TestWithTraceID"
+		if final.FunctionKey != "" {
+			shortFunctionEncoder(ent.Caller.Function, arr)
+		}
 	}
 	// Add the trace id.
 	if final.traceID != "" {
@@ -505,4 +511,16 @@ func (enc *consoleEncoder) addSeparatorIfNecessary(line *buffer.Buffer) {
 	if line.Len() > 0 {
 		line.AppendString(enc.ConsoleSeparator)
 	}
+}
+
+func shortFunctionEncoder(funcname string, enc zapcore.PrimitiveArrayEncoder) {
+	enc.AppendString(trimmedFunc(funcname))
+}
+
+func trimmedFunc(funcname string) string {
+	lastIndex := strings.LastIndex(funcname, "/")
+	if lastIndex == -1 {
+		return funcname
+	}
+	return funcname[lastIndex+1:]
 }

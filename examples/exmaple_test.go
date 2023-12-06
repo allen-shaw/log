@@ -53,6 +53,7 @@ func TestWithField(t *testing.T) {
 func TestWithTraceID(t *testing.T) {
 	myTraceKey := "my_trace_id"
 	logger := log.NewLogger(
+		log.WithSkip(1),
 		log.WithTraceKey(myTraceKey),
 	).With(log.String(myTraceKey, "123674523547263541672341874"))
 	defer logger.Sync()
