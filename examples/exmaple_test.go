@@ -42,3 +42,20 @@ func TestLevelLogger(t *testing.T) {
 
 	logger.Sync()
 }
+
+func TestWithField(t *testing.T) {
+	logger := log.NewLogger().With(log.Int("id", 123))
+	defer logger.Sync()
+
+	logger.Info("hello", log.String("test_str", "world"))
+}
+
+func TestWithTraceID(t *testing.T) {
+	myTraceKey := "my_trace_id"
+	logger := log.NewLogger(
+		log.WithTraceKey(myTraceKey),
+	).With(log.String(myTraceKey, "123674523547263541672341874"))
+	defer logger.Sync()
+
+	logger.Info("hello", log.String("test_trace", "nothing"))
+}
