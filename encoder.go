@@ -2,7 +2,6 @@ package log
 
 import (
 	"github.com/allen-shaw/log/Internal/encoder"
-	"go.uber.org/zap/buffer"
 	"go.uber.org/zap/zapcore"
 )
 
@@ -30,11 +29,6 @@ func newProductionEncoderConfig(traceKey string) encoder.Config {
 			ConsoleSeparator: _separator,
 		},
 	}
-}
-
-type consoleEncoder struct {
-	*encoder.Config
-	buf *buffer.Buffer
 }
 
 func newEncoder(opt *options) zapcore.Encoder {
