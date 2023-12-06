@@ -24,13 +24,13 @@ func NewLogger(opts ...Options) *Logger {
 
 	encoder := newEncoder(opt)
 	tops := newTee(encoder, opt)
-	lg := newLogger(tops, opt.skip, opt.hooks, opt.opts...)
+	lg := newLogger(tops, opt)
 	l.logger = lg
 
 	return l
 }
 
-func newLogger(tops []*tee, skip int, hooks []func(zapcore.Entry) error, opts ...zap.Option) *zap.Logger {
+func newLogger(tops []*tee, opts *options) *zap.Logger {
 	var cores []zapcore.Core
 
 	for _, top := range tops {
@@ -41,12 +41,12 @@ func newLogger(tops []*tee, skip int, hooks []func(zapcore.Entry) error, opts ..
 	opt := append([]zap.Option{
 		zap.AddCaller(),
 		zap.AddStacktrace(PanicLevel),
-		zap.AddCallerSkip(skip),
-		zap.Hooks(hooks...),
-	}, opts...)
+		zap.AddCallerSkip(opts.skip),
+		zap.Hooks(opts.hooks...),
+	}, opts.opts...)
 
 	logger := zap.New(zapcore.NewTee(cores...), opt...)
-	logger = logger.With(zap.String(_traceKey, "-"))
+	logger = logger.With(zap.String(opts.traceKey, "-"))
 
 	return logger
 }

@@ -7,14 +7,13 @@ import (
 )
 
 const (
-	_traceKey   = "@trace_id"
 	_timeLayout = "2006-01-02 15:04:05.999-07:00"
 	_separator  = "|"
 )
 
-func newProductionEncoderConfig() encoder.Config {
+func newProductionEncoderConfig(traceKey string) encoder.Config {
 	return encoder.Config{
-		TraceKey: _traceKey,
+		TraceKey: traceKey,
 		EncoderConfig: zapcore.EncoderConfig{
 			TimeKey:          "ts",
 			LevelKey:         "level",
@@ -39,7 +38,7 @@ type consoleEncoder struct {
 }
 
 func newEncoder(opt *options) zapcore.Encoder {
-	ecfg := newProductionEncoderConfig()
+	ecfg := newProductionEncoderConfig(opt.traceKey)
 	return newConsoleEncoder(ecfg)
 }
 

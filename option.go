@@ -7,7 +7,9 @@ import (
 	"go.uber.org/zap/zapcore"
 )
 
-const _logSuffix = ".log"
+const (
+	_logSuffix = ".log"
+)
 
 type Option zap.Option
 
@@ -17,6 +19,7 @@ type options struct {
 	localTime bool
 	tees      []teeOption
 	skip      int
+	traceKey  string
 	hooks     []func(zapcore.Entry) error
 	opts      []zap.Option
 }
@@ -37,6 +40,8 @@ type rotateOption struct {
 }
 
 var (
+	defTraceKey = "@trace_id"
+
 	defLevelFunc = func(level Level) zap.LevelEnablerFunc {
 		return func(l zapcore.Level) bool {
 			return l >= level
@@ -56,6 +61,7 @@ var (
 	defOpts = options{
 		level:     InfoLevel,
 		localTime: true,
+		traceKey:  defTraceKey,
 	}
 )
 
@@ -85,6 +91,10 @@ func WithLocalTime(localTime bool) Options {
 
 func WithSkip(skip int) Options {
 	return skipOption(skip)
+}
+
+func WithTraceKey(traceKey string) Options {
+	return tracekeyOption(traceKey)
 }
 
 func WithHooks(hooks []func(zapcore.Entry) error) Options {
@@ -157,6 +167,12 @@ type skipOption int
 
 func (s skipOption) apply(opts *options) {
 	opts.skip = int(s)
+}
+
+type tracekeyOption string
+
+func (t tracekeyOption) apply(opts *options) {
+	opts.traceKey = string(t)
 }
 
 type hooksOption []func(zapcore.Entry) error
