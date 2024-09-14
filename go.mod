@@ -3,9 +3,9 @@ module github.com/allen-shaw/log
 go 1.20
 
 require (
-	go.uber.org/zap v1.26.0
-	google.golang.org/protobuf v1.31.0
+	go.uber.org/zap v1.27.0
+	google.golang.org/protobuf v1.34.2
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1
 )
 
-require go.uber.org/multierr v1.10.0 // indirect
+require go.uber.org/multierr v1.11.0 // indirect
